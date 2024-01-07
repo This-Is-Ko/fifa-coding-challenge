@@ -80,7 +80,7 @@ def calculate_passing_statistics():
 
     pass_events = events_with_passing_success[events_with_passing_success['event'].isin(['Pass', 'Cross'])]
 
-    # Find total passes by each player
+    # Find total passes by each player and highest pass count
     pass_counts = pass_events['player_id'].value_counts()
     most_passes_player = pass_counts.idxmax()
 
