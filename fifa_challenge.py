@@ -49,7 +49,7 @@ def calc_ball_trajectory_length():
 
     # Convert to meters
     trajectory_length_meters = trajectory_length/100
-    print("Ball trajectory length from KO to first Ball Out of Play: {}".format(trajectory_length_meters))
+    print("Ball trajectory length from KO to first Ball Out of Play: {} meters".format(trajectory_length_meters))
 
 
 def calculate_distance(x1, y1, x2, y2):
@@ -80,23 +80,28 @@ def calculate_passing_statistics():
 
     pass_events = events_with_passing_success[events_with_passing_success['event'].isin(['Pass', 'Cross'])]
 
+    # Find total passes by each player
     pass_counts = pass_events['player_id'].value_counts()
     most_passes_player = pass_counts.idxmax()
 
+    # Find highest passing success percentage
     pass_completion_rates = pass_events.groupby('player_id')['pass_success'].mean().reset_index(name='pass_completion_rate')
     max_completion_rate = pass_completion_rates['pass_completion_rate'].max()
+    # Find all players who match the highest percentage
     best_pass_completion_players = pass_completion_rates[pass_completion_rates['pass_completion_rate'] == max_completion_rate]['player_id']
 
     print("Most passes by: {}".format(most_passes_player))
-    print("Best pass completion by: {}".format(list(best_pass_completion_players)))
+    print("Best pass completion rate was {}% by: {}".format(max_completion_rate*100, list(best_pass_completion_players)))
 
 
 if __name__ == '__main__':
     # 1
     load_event_and_tracking_data()
-    # 2
+    # 2 - 78.66 meters
     calc_ball_trajectory_length()
-    # 3
+    # 3 
     add_successful_pass_cross_flag()
-    # 4
+    # 4 - Most passes by Player 289964
+    #   - Multiple players had the best pass completion rate of 100%
+    #     308352, 358112, 369744, 379955, 395433, 401281, 429392, 433806
     calculate_passing_statistics()
